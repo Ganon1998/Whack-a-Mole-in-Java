@@ -3,11 +3,11 @@ import java.util.Stack;
 public class Mole
 {
 
-    public Stack<UserInputGrid> recordStack;
+    public Stack<UserInputCoordinates> recordStack;
 
     public Mole() { }
 
-    public void play(UserInputGrid userInput, boolean inSpot)
+    public void play(UserInputCoordinates userInput, boolean inSpot)
     {
         if (!inSpot)
         {
@@ -21,7 +21,7 @@ public class Mole
             double newY = Math.random() * 3;
 
             // get previous spot where Mole was whacked
-            UserInputGrid lastSpot = recordStack.peek();
+            UserInputCoordinates lastSpot = recordStack.peek();
 
             // if the new mole goto coordinates are identical (for whatever reason) to the previous input
             while (lastSpot.X == newX && lastSpot.Y == newY)

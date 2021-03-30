@@ -2,12 +2,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Ellipse2D;
 
 
 public class GameBoard extends JFrame {
 
-    JLabel[] holeDesgin = new JLabel[9];
-    public GameBoard(){
+    private static JLabel[] holeDesgin = new JLabel[9];
+    public GameBoard() {
+
     setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
     setBounds(150,150,660,770); // set frame bounds
     setTitle("WHACK-A-MOLE");
@@ -86,6 +90,9 @@ public class GameBoard extends JFrame {
                 }
                 add(holeDesgin[i]);
             }
+
+            // mouse action
+            ClickGameBoard clicker = new ClickGameBoard();
 
 
             setContentPane(startMenu);
@@ -169,4 +176,73 @@ public class GameBoard extends JFrame {
         }
     });
 }
+
+    public static JLabel[] getHoleDesign() {
+        return holeDesgin;
+    }
 }
+
+class ClickGameBoard extends JPanel
+{
+    private final class MouseDrag extends MouseAdapter {
+        private boolean clickInCell = false;
+        private Point last;
+
+        @Override
+        public void mousePressed(MouseEvent m) {
+            last = m.getPoint();
+            clickInCell = isInsideCell(last);
+            if (clickInCell)
+            {
+                x = last.x;
+                y = last.y;
+            }
+            repaint();
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent m) {
+            UserInputCoordinates.X = last.x;
+            UserInputCoordinates.Y = last.y;
+
+            last = null;
+            clickInCell = false;
+            repaint();
+        }
+    }
+
+    private int x = 0;
+    private int y = 0;
+
+    private MouseDrag mouseDrag;
+
+    public ClickGameBoard() {
+        setBackground(Color.WHITE);
+        mouseDrag = new MouseDrag();
+        addMouseListener(mouseDrag);
+        addMouseMotionListener(mouseDrag);
+    }
+
+    // checks to see if mouse click is inside a cell or not returns true if so, returns false otherwise
+    public boolean isInsideCell(Point point)
+    {
+        boolean inCell = false;
+        JLabel[] array = GameBoard.getHoleDesign();
+
+        for (int i = 0; i < array.length; i++)
+        {
+            // if any of the mouse inputs are within the coordinates of the cell
+            if (array[i].getX() <= point.x && array[i].getY() <= point.y)
+                inCell = true;
+        }
+        return inCell;
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+    }
+
+
+}
+

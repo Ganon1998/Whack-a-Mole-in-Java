@@ -10,6 +10,9 @@ import java.awt.geom.Ellipse2D;
 public class GameBoard extends JFrame {
 
     private static JLabel[] holeDesgin = new JLabel[9];
+    private static int nextSpotforMole;
+    public static int score;
+    public static int RoundCount;
     public GameBoard() {
 
         setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
@@ -248,9 +251,6 @@ public class GameBoard extends JFrame {
                 setContentPane(startMenu);
 
 
-
-
-
             }
         });
 
@@ -297,37 +297,37 @@ public class GameBoard extends JFrame {
     public static JLabel[] getHoleDesign() {
         return holeDesgin;
     }
+    public static void setMole(int nextSpot){ nextSpotforMole = nextSpot; }
+    public static int getMole(){ return nextSpotforMole; }
 }
 
 
-
+// mouse event class
 class ClickGameBoard extends JPanel
 {
-
     private final class MouseDrag extends MouseAdapter {
-        private boolean clickInCell = false;
+        private boolean clickedMole = false;
         private Point last;
 
         @Override
         public void mousePressed(MouseEvent m) {
             last = m.getPoint();
-            clickInCell = isInsideCell(last);
-            if (clickInCell)
-            {
-                x = last.x;
-                y = last.y;
+            clickedMole = isInsideCell(last);
+
+            if (clickedMole == false) {
+                GameBoard.score--;
+                GameBoard.setMole((int) Math.random() * 9);
             }
+            else
+                GameBoard.score+=3;
 
             repaint();
         }
 
         @Override
         public void mouseReleased(MouseEvent m) {
-            UserInputCoordinates.X = last.x;
-            UserInputCoordinates.Y = last.y;
-
             last = null;
-            clickInCell = false;
+            clickedMole = false;
             repaint();
         }
     }
@@ -348,13 +348,20 @@ class ClickGameBoard extends JPanel
     public boolean isInsideCell(Point point)
     {
         boolean inCell = false;
-        JLabel[] array = GameBoard.getHoleDesign();
+        JLabel[] Jarray = GameBoard.getHoleDesign();
 
-        for (int i = 0; i < array.length; i++)
+        for (int i = 0; i < Jarray.length; i++)
         {
-            // if any of the mouse inputs are within the coordinates of the cell
-            if (array[i].getX() <= point.x && array[i].getY() <= point.y)
+            // if any of the mouse inputs are within the coordinates of the cell and it matches the mole's locaiton
+            if ((Jarray[i].getX() <= point.x && Jarray[i].getY() <= point.y) && i == GameBoard.getMole())
+            {
                 inCell = true;
+                Mole mole = new Mole();
+
+                // get the next mole location
+                GameBoard.setMole(mole.play(i));
+                break;
+            }
 
         }
         return inCell;
@@ -362,8 +369,7 @@ class ClickGameBoard extends JPanel
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-
     }
 
-    }
+}
 

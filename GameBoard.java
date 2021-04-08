@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
+import javax.swing.Timer;
 
 
 public class GameBoard extends JFrame {
@@ -13,6 +14,8 @@ public class GameBoard extends JFrame {
     private static int nextSpotforMole;
     public static int score;
     public static int RoundCount;
+    private static Timer timer;
+
     public GameBoard() {
 
         setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
@@ -53,11 +56,14 @@ public class GameBoard extends JFrame {
                 g.drawOval(250,450,100,100);
                 g.drawOval(450,450,100,100);
 
-
-
+                // create timer once game begins
+                timer = new Timer(1000, (ActionListener) this);
+                timer.start();
 
                 setBackground(new Color(20,80,0));
 
+                // instantiate mouse
+                ClickGameBoard clicker = new ClickGameBoard();
 
 
             }
@@ -299,6 +305,7 @@ public class GameBoard extends JFrame {
     }
     public static void setMole(int nextSpot){ nextSpotforMole = nextSpot; }
     public static int getMole(){ return nextSpotforMole; }
+    public static Timer getTime(){ return timer; }
 }
 
 
@@ -307,33 +314,34 @@ class ClickGameBoard extends JPanel
 {
     private final class MouseDrag extends MouseAdapter {
         private boolean clickedMole = false;
-        private Point last;
+        //private Point last;
 
         @Override
         public void mousePressed(MouseEvent m) {
-            last = m.getPoint();
-            clickedMole = isInsideCell(last);
+            //last = m.getPoint();
 
+            // this will check if the mole has been clicked
+            clickedMole = isInsideCell(m.getPoint());
             if (clickedMole == false) {
+                // decrement the score
                 GameBoard.score--;
-                GameBoard.setMole((int) Math.random() * 9);
             }
-            else
-                GameBoard.score+=3;
+            else {
+                // increment the round as well as the score
+                GameBoard.score += 3;
+                GameBoard.RoundCount++;
+            }
 
             repaint();
         }
 
         @Override
         public void mouseReleased(MouseEvent m) {
-            last = null;
+            //last = null;
             clickedMole = false;
             repaint();
         }
     }
-
-    private int x = 0;
-    private int y = 0;
 
     private MouseDrag mouseDrag;
 
@@ -357,13 +365,13 @@ class ClickGameBoard extends JPanel
             {
                 inCell = true;
                 Mole mole = new Mole();
-
                 // get the next mole location
                 GameBoard.setMole(mole.play(i));
-                break;
+                return inCell;
             }
 
         }
+        GameBoard.setMole((int) (Math.random() * 9));
         return inCell;
     }
     @Override

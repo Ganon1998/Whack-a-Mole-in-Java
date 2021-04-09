@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
+import java.util.TimerTask;
 import javax.swing.Timer;
 
 
@@ -15,6 +16,8 @@ public class GameBoard extends JFrame {
     public static int score;
     public static int RoundCount;
     private static Timer timer;
+    int timerSecs = 20;
+    boolean firstTime = true;
 
     public GameBoard() {
 
@@ -30,6 +33,7 @@ public class GameBoard extends JFrame {
         JButton rules = new JButton("Rules");
         JButton leaderboard = new JButton("Leaderboard");
         JButton quit = new JButton("Quit");
+        JButton startMoles = new JButton("Start Game");
 
         //create starting menu, this button will act as the "go to main menu button"
         JButton toStart = new JButton("Main Menu");
@@ -56,16 +60,50 @@ public class GameBoard extends JFrame {
                 g.drawOval(250,450,100,100);
                 g.drawOval(450,450,100,100);
 
-                // create timer once game begins
-                timer = new Timer(1000, (ActionListener) this);
-                timer.start();
 
                 setBackground(new Color(20,80,0));
 
                 // instantiate mouse
                 ClickGameBoard clicker = new ClickGameBoard();
+                //create holes, add to specific locations
+                if(firstTime = true) {
+                    firstTime = false;
+                    for (int i = 0; i < 9; i++) {
+                        holeDesgin[i] = new JLabel();
+                        //  holeDesgin[i].setName("HOLE" + i);
+
+                        if (i == 0) {
+                            holeDesgin[i].setBounds(80, 150, 100, 100);
+                        }
+                        if (i == 1) {
+                            holeDesgin[i].setBounds(280, 150, 100, 100);
+                        }
+                        if (i == 2) {
+                            holeDesgin[i].setBounds(480, 150, 100, 100);
+                        }
+                        if (i == 3) {
+                            holeDesgin[i].setBounds(80, 300, 100, 100);
+                        }
+                        if (i == 4) {
+                            holeDesgin[i].setBounds(280, 300, 100, 100);
+                        }
+                        if (i == 5) {
+                            holeDesgin[i].setBounds(480, 300, 100, 100);
+                        }
+                        if (i == 6) {
+                            holeDesgin[i].setBounds(80, 450, 100, 100);
+                        }
+                        if (i == 7) {
+                            holeDesgin[i].setBounds(280, 450, 100, 100);
+                        }
+                        if (i == 8) {
+                            holeDesgin[i].setBounds(480, 450, 100, 100);
+                        }
+                        add(holeDesgin[i]);
+                    }
 
 
+                }
             }
         }
 
@@ -76,7 +114,7 @@ public class GameBoard extends JFrame {
         toStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                timerSecs = 20;
                 //repaint panel
                 startMenu.removeAll();
                 revalidate();
@@ -108,6 +146,7 @@ public class GameBoard extends JFrame {
                 add(new Box.Filler(minSize,prefSize,maxSize));
                 add(quit);
 
+
                 setContentPane(startMenu);
             }
         });
@@ -124,22 +163,23 @@ public class GameBoard extends JFrame {
                 //calls the class DrawGameBoardHoles to create the hole drawings
                 DrawGameBoardHoles draw = new DrawGameBoardHoles();
                 startMenu.add(draw);
+                //set drawmole JLabel
 
                 //set the header font and text
-                Font headFont = new Font(Font.SANS_SERIF,Font.BOLD,30);
+                Font headFont = new Font(Font.SANS_SERIF, Font.BOLD, 30);
                 JLabel header = new JLabel("Whack The Moles!!");
-                header.setForeground(new Color (0,0,0));
+                header.setForeground(new Color(0, 0, 0));
                 header.setFont(headFont);
                 add(header);
-               // header.setAlignmentX(Component.TOP_ALIGNMENT);
+                // header.setAlignmentX(Component.TOP_ALIGNMENT);
 
-                Font font = new Font (Font.DIALOG, Font.BOLD, 20);
+                Font font = new Font(Font.DIALOG, Font.BOLD, 20);
 
                 JLabel scoreText = new JLabel("Score: ");
                 JLabel timerText = new JLabel("Time: ");
                 JLabel secondsText = new JLabel("20");
                 JLabel scoreNumText = new JLabel("0");
-                
+                timerSecs = 20;
                 /*for (int i=30; i>0; i--){
                     secondsText = new JLabel(String.valueOf(i));
                     try {
@@ -176,51 +216,40 @@ public class GameBoard extends JFrame {
                 secondsText.setAlignmentY(Component.TOP_ALIGNMENT);
 
 
-
                 add(toStart);
+                add(startMoles);
+
                 toStart.setAlignmentX(Component.CENTER_ALIGNMENT);
                 header.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-
                 setContentPane(startMenu);
 
-                //create holes, add to specific locations
-                for (int i=0; i<9; i++){
-                    holeDesgin[i] = new JLabel("HOLE" + i);
-                    holeDesgin[i].setName("HOLE" + i);
 
-                    if(i==0){
-                        holeDesgin[i].setBounds(80,150,100,100);
+
+                startMoles.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        secondsText.setText("" + timerSecs);
+                        timer.start();
                     }
-                    if(i==1){
-                        holeDesgin[i].setBounds(280,150,100,100);
+                });
+
+                timer = new Timer(1000, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+
+                            secondsText.setText("" + timerSecs);
+                            timerSecs--;
+
                     }
-                    if(i==2){
-                        holeDesgin[i].setBounds(480,150,100,100);
-                    }
-                    if(i==3){
-                        holeDesgin[i].setBounds(80,300,100,100);
-                    }
-                    if(i==4){
-                        holeDesgin[i].setBounds(280,300,100,100);
-                    }
-                    if(i==5){
-                        holeDesgin[i].setBounds(480,300,100,100);
-                    }
-                    if(i==6){
-                        holeDesgin[i].setBounds(80,450,100,100);
-                    }
-                    if(i==7){
-                        holeDesgin[i].setBounds(280,450,100,100);
-                    }
-                    if(i==8){
-                        holeDesgin[i].setBounds(480,450,100,100);
-                    }
-                    add(holeDesgin[i]);
-                }
+                });
+
 
             }
+
         });
+
+
 
         rules.addActionListener(new ActionListener() {
             @Override
@@ -331,7 +360,6 @@ class ClickGameBoard extends JPanel
                 GameBoard.score += 3;
                 GameBoard.RoundCount++;
             }
-
             repaint();
         }
 
@@ -380,4 +408,3 @@ class ClickGameBoard extends JPanel
     }
 
 }
-

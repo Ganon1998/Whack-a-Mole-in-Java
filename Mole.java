@@ -1,3 +1,5 @@
+import javax.swing.*;
+import java.awt.*;
 import java.util.Deque;
 import java.util.Stack;
 
@@ -45,6 +47,22 @@ public class Mole
         return newSpot;
 
     }
+    static class drawMole implements Icon {
 
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+            g.setColor(new Color(65,45,20));
+            g.fillOval(50,50,50,50);
+        }
+
+        @Override
+        public int getIconWidth() {
+            return 0;
+        }
+
+        @Override
+        public int getIconHeight() {
+            return 0;
+        }
+    }
 }
-

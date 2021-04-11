@@ -1,28 +1,38 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.Deque;
-import java.util.Stack;
 
 public class Mole
 {
-
+    public ImageIcon moleIcon;
     public Deque<Integer> recordDeque;
 
     public Mole() { }
+    public Icon drawMole(){
 
+        moleIcon = new ImageIcon("resources/image/mole.png");
+        Image resize = moleIcon.getImage();
+        Image resizedMole = resize.getScaledInstance(100,100, Image.SCALE_REPLICATE);
+        moleIcon = new ImageIcon(resizedMole);
+        return moleIcon;
+    }
     public int startMole()
     {
-        return (int) Math.random() * 9;
+        return (int) (Math.random() * 9);
     }
 
     public int play(int moleIndex)
     {
+
+
+
+
         recordDeque.addFirst(moleIndex);
         int lastSpot = 0;
         int firstSpot = 0;
 
         // generate next spot to go to, newSpot is the index in the Jlabel array
-        int newSpot = (int) Math.random() * 9;
+        int newSpot = (int) (Math.random() * 9);
 
         // get previous spot where Mole was whacked
         if (!recordDeque.isEmpty()) {
@@ -47,22 +57,5 @@ public class Mole
         return newSpot;
 
     }
-    static class drawMole implements Icon {
 
-        @Override
-        public void paintIcon(Component c, Graphics g, int x, int y) {
-            g.setColor(new Color(65,45,20));
-            g.fillOval(50,50,50,50);
-        }
-
-        @Override
-        public int getIconWidth() {
-            return 0;
-        }
-
-        @Override
-        public int getIconHeight() {
-            return 0;
-        }
-    }
 }

@@ -11,6 +11,7 @@ import javax.swing.Timer;
 
 public class GameBoard extends JFrame {
 
+    int counter = 0; //only redraw gameboard when it is 0;
     private static JLabel[] holeDesgin = new JLabel[9];
     private static int nextSpotforMole;
     public static int score;
@@ -18,6 +19,8 @@ public class GameBoard extends JFrame {
     private static Timer timer;
     int timerSecs = 20;
     boolean firstTime = true;
+    private Object drawMole;
+    Mole moleClass = new Mole();
 
     public GameBoard() {
 
@@ -43,68 +46,74 @@ public class GameBoard extends JFrame {
 
 
         //this class draws the ovals around the holeDesign jpanels
-        class DrawGameBoardHoles extends JPanel{
-            @Override
-            public void paintComponent(Graphics g) {
+        class DrawGameBoardHoles extends JPanel {
 
+            @Override
+            protected void paintComponent(Graphics g) {
 
                 super.paintComponent(g);
+
+                //JLabel mole = new JLabel("mole");
                 g.setColor(Color.RED);
-                g.drawOval(50,150,100,100);
-                g.drawOval(250,150,100,100);
-                g.drawOval(450,150,100,100);
-                g.drawOval(50,300,100,100);
-                g.drawOval(250,300,100,100);
-                g.drawOval(450,300,100,100);
-                g.drawOval(50,450,100,100);
-                g.drawOval(250,450,100,100);
-                g.drawOval(450,450,100,100);
+                g.drawOval(50, 150, 100, 100);
+                g.drawOval(250, 150, 100, 100);
+                g.drawOval(450, 150, 100, 100);
+                g.drawOval(50, 300, 100, 100);
+                g.drawOval(250, 300, 100, 100);
+                g.drawOval(450, 300, 100, 100);
+                g.drawOval(50, 450, 100, 100);
+                g.drawOval(250, 450, 100, 100);
+                g.drawOval(450, 450, 100, 100);
 
 
-                setBackground(new Color(20,80,0));
+                setBackground(new Color(20, 80, 0));
 
                 // instantiate mouse
                 ClickGameBoard clicker = new ClickGameBoard();
                 //create holes, add to specific locations
-                if(firstTime = true) {
-                    firstTime = false;
-                    for (int i = 0; i < 9; i++) {
-                        holeDesgin[i] = new JLabel();
-                        //  holeDesgin[i].setName("HOLE" + i);
 
-                        if (i == 0) {
-                            holeDesgin[i].setBounds(80, 150, 100, 100);
-                        }
-                        if (i == 1) {
-                            holeDesgin[i].setBounds(280, 150, 100, 100);
-                        }
-                        if (i == 2) {
-                            holeDesgin[i].setBounds(480, 150, 100, 100);
-                        }
-                        if (i == 3) {
-                            holeDesgin[i].setBounds(80, 300, 100, 100);
-                        }
-                        if (i == 4) {
-                            holeDesgin[i].setBounds(280, 300, 100, 100);
-                        }
-                        if (i == 5) {
-                            holeDesgin[i].setBounds(480, 300, 100, 100);
-                        }
-                        if (i == 6) {
-                            holeDesgin[i].setBounds(80, 450, 100, 100);
-                        }
-                        if (i == 7) {
-                            holeDesgin[i].setBounds(280, 450, 100, 100);
-                        }
-                        if (i == 8) {
-                            holeDesgin[i].setBounds(480, 450, 100, 100);
-                        }
-                        add(holeDesgin[i]);
+                for (int i=0; i<9; i++) {
+                    holeDesgin[i] = new JLabel();
+                    if (i == 1) {
+
+                        holeDesgin[i].setBounds(280, 150, 100, 100);
+
+                    }
+                    if (i == 2) {
+                        holeDesgin[i].setBounds(480, 150, 100, 100);
+
+                    }
+                    if (i == 3) {
+                        holeDesgin[i].setBounds(80, 300, 100, 100);
+
+                    }
+                    if (i == 4) {
+                        holeDesgin[i].setBounds(280, 300, 100, 100);
+
+                    }
+                    if (i == 5) {
+                        holeDesgin[i].setBounds(480, 300, 100, 100);
+
+                    }
+                    if (i == 6) {
+                        holeDesgin[i].setBounds(80, 450, 100, 100);
+
+                    }
+                    if (i == 7) {
+                        holeDesgin[i].setBounds(280, 450, 100, 100);
+
                     }
 
+                    if (i==8){
+                        holeDesgin[i].setBounds(480, 450, 100, 100);
+                    }
+
+                    add(holeDesgin[i]);
 
                 }
+
             }
+
         }
 
 
@@ -114,7 +123,7 @@ public class GameBoard extends JFrame {
         toStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                timerSecs = 20;
+             //   timerSecs = 20;
                 //repaint panel
                 startMenu.removeAll();
                 revalidate();
@@ -155,15 +164,31 @@ public class GameBoard extends JFrame {
         startGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //repaint panel
-                startMenu.removeAll();
-                revalidate();
-                repaint();
 
+                    //repaint panel
+                    startMenu.removeAll();
+                    revalidate();
+                    repaint();
+
+
+
+
+
+
+
+
+
+
+
+
+
+                if (counter<3){
+                    DrawGameBoardHoles draw = new DrawGameBoardHoles();
+                    startMenu.add(draw);
+                    counter++;
+                }
                 //calls the class DrawGameBoardHoles to create the hole drawings
-                DrawGameBoardHoles draw = new DrawGameBoardHoles();
-                startMenu.add(draw);
-                //set drawmole JLabel
+
 
                 //set the header font and text
                 Font headFont = new Font(Font.SANS_SERIF, Font.BOLD, 30);
@@ -180,14 +205,7 @@ public class GameBoard extends JFrame {
                 JLabel secondsText = new JLabel("20");
                 JLabel scoreNumText = new JLabel("0");
                 timerSecs = 20;
-                /*for (int i=30; i>0; i--){
-                    secondsText = new JLabel(String.valueOf(i));
-                    try {
-                        Thread.sleep(1000L);
-                    } catch (InterruptedException interruptedException) {
-                        interruptedException.printStackTrace();
-                    }
-                }*/
+
                 scoreText.setForeground(Color.RED);
                 timerText.setForeground(Color.RED);
                 secondsText.setForeground(Color.RED);
@@ -222,29 +240,29 @@ public class GameBoard extends JFrame {
                 toStart.setAlignmentX(Component.CENTER_ALIGNMENT);
                 header.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-                setContentPane(startMenu);
-
-
 
                 startMoles.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        secondsText.setText("" + timerSecs);
+                        holeDesgin[moleClass.startMole()].setIcon(moleClass.drawMole());
                         timer.start();
+
                     }
                 });
 
                 timer = new Timer(1000, new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-
+                        if (timerSecs == 0){
+                            timer.stop();
+                        }
                             secondsText.setText("" + timerSecs);
                             timerSecs--;
 
                     }
                 });
 
-
+                    setContentPane(startMenu);
             }
 
         });
@@ -283,7 +301,7 @@ public class GameBoard extends JFrame {
                 add(toStart);
                 toStart.setAlignmentX(Component.CENTER_ALIGNMENT);
                 header.setAlignmentX(Component.CENTER_ALIGNMENT);
-                setContentPane(startMenu);
+               // setContentPane(startMenu);
 
 
             }
@@ -316,14 +334,13 @@ public class GameBoard extends JFrame {
                 add(toStart);
                 toStart.setAlignmentX(Component.CENTER_ALIGNMENT);
                 header.setAlignmentX(Component.CENTER_ALIGNMENT);
-                setContentPane(startMenu);
+            //    setContentPane(startMenu);
             }
         });
 
         quit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 System.exit(0);
             }
         });
@@ -402,9 +419,9 @@ class ClickGameBoard extends JPanel
         GameBoard.setMole((int) (Math.random() * 9));
         return inCell;
     }
-    @Override
+    /*@Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-    }
+    }*/
 
 }

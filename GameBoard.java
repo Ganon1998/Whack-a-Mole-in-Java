@@ -49,7 +49,10 @@ public class GameBoard extends JFrame {
         toStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-             //   timerSecs = 20;
+
+
+
+                //   timerSecs = 20;
                 //repaint panel
                 startMenu.removeAll();
                 revalidate();
@@ -85,22 +88,16 @@ public class GameBoard extends JFrame {
                 //Start game, this will draw the board
                 startGame.addActionListener(new ActionListener() {
 
-
-
                     @Override
                     public void actionPerformed(ActionEvent e) {
 
                         //repaint panel
                         startMenu.removeAll();
-                       revalidate();
+                        revalidate();
                         repaint();
 
-                        if (counter<3){
-                            //  DrawGameBoardHoles draw = new DrawGameBoardHoles();
-                            // startMenu.add(draw);
-                            counter++;
-                        }
-                        //calls the class DrawGameBoardHoles to create the hole drawings
+
+                        //DISPLAY THE GAMEBOARD FOR THE FIRST TIME, BEFORE "START" IS CLICKED
 
 
                         //set the header font and text
@@ -154,6 +151,8 @@ public class GameBoard extends JFrame {
                         header.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 
+
+                        //WHEN "START" IS CLICKED, GO TO ACTION LISTENER AND START TIMER
                         startMoles.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
@@ -170,21 +169,43 @@ public class GameBoard extends JFrame {
 
                         });
 
+
+                        //EVERY SECOND, REDRAW THE TIMER AND SCORE LABELS, WITH THE TIMER REDRAWN AS TIMERSECS-1
                         timer = new Timer(1000, new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                if (timerSecs == 0){
-                                    timer.stop();
-                                }
+
 
 
                                 class DrawGameBoardHoles extends JPanel {
+
 
                                     @Override
                                     protected void paintComponent(Graphics g) {
                                         setBackground(new Color(20, 80, 0));
 
+                                        add(scoreText);
+                                        add(scoreNumText);
+                                        add(timerText);
+                                        add(secondsText);
 
+
+                                        scoreText.setAlignmentX(Component.CENTER_ALIGNMENT);
+                                        scoreNumText.setAlignmentX(Component.CENTER_ALIGNMENT);
+                                        timerText.setAlignmentX(Component.CENTER_ALIGNMENT);
+                                        secondsText.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+
+                                        scoreText.setAlignmentY(Component.TOP_ALIGNMENT);
+                                        scoreNumText.setAlignmentY(Component.TOP_ALIGNMENT);
+                                        timerText.setAlignmentY(Component.TOP_ALIGNMENT);
+                                        secondsText.setAlignmentY(Component.TOP_ALIGNMENT);
+
+
+                                        toStart.setAlignmentX(Component.CENTER_ALIGNMENT);
+                                        header.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+                                    //REDRAW OVALS
                                         super.paintComponent(g);
                                         startMenu.removeAll();
                                         revalidate();
@@ -205,7 +226,7 @@ public class GameBoard extends JFrame {
                                         // instantiate mouse
                                         ClickGameBoard clicker = new ClickGameBoard();
                                         //create holes, add to specific locations
-
+                                        //maybe can put this in a separate clas??
                                         for (int i=0; i<9; i++) {
                                             holeDesgin[i] = new JLabel();
 
@@ -247,22 +268,26 @@ public class GameBoard extends JFrame {
                                             add(holeDesgin[i]);
 
                                         }
+
+                                        //randomize the mole location each second
                                         holeDesgin[moleClass.startMole()].setIcon(moleClass.drawMole());
                                     }
 
                                 }
 
 
-
-
+                                //add the drawgameboardholes class, this next block of code is what happens after the timer delays 1000 millisecs
                                 DrawGameBoardHoles draw = new DrawGameBoardHoles();
                                 startMenu.add(draw);
-
 
 
                                 secondsText.setText("" + timerSecs--);
 
                                 secondsText.setText("" + timerSecs);
+                                if (timerSecs == 0){
+                                    timer.stop();
+                                }
+
                                 EventQueue.invokeLater(new Runnable() {
                                     public void run() {
                                         revalidate();

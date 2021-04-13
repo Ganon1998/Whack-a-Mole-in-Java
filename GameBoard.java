@@ -15,12 +15,15 @@ public class GameBoard extends JFrame {
     private static JLabel[] holeDesgin = new JLabel[9];
     private static int nextSpotforMole;
     public static int score;
-    public static int RoundCount;
+    public static int BonusTimeModifier;
     private static Timer timer;
+
     int timerSecs = 20;
     boolean firstTime = true;
     private Object drawMole;
     Mole moleClass = new Mole();
+
+    public static JLabel scoreNumText;
 
     public GameBoard() {
 
@@ -113,7 +116,7 @@ public class GameBoard extends JFrame {
                         JLabel scoreText = new JLabel("Score: ");
                         JLabel timerText = new JLabel("Time: ");
                         JLabel secondsText = new JLabel("20");
-                        JLabel scoreNumText = new JLabel("0");
+                        scoreNumText = new JLabel("0");
                         timerSecs = 20;
 
                         scoreText.setForeground(Color.RED);
@@ -284,8 +287,36 @@ public class GameBoard extends JFrame {
                                 secondsText.setText("" + timerSecs--);
 
                                 secondsText.setText("" + timerSecs);
-                                if (timerSecs == 0){
+
+                                // creates score board screen
+                                if (timerSecs == 0)
+                                {
                                     timer.stop();
+
+                                    //repaint screen
+                                    startMenu.removeAll();
+                                    revalidate();
+                                    repaint();
+
+                                    //set invisible spacing dimensions
+                                    Dimension minSize = new Dimension(10,600);
+                                    Dimension prefSize = new Dimension(10,600);
+                                    Dimension maxSize = new Dimension(Short.MAX_VALUE,600);
+
+                                    startMenu.setBackground(new Color(100,0,0));
+
+                                    //set header text
+                                    Font headFont = new Font(Font.SANS_SERIF,Font.BOLD,50);
+                                    JLabel header = new JLabel("Leaderboard");
+                                    header.setForeground(new Color (0,0,0));
+                                    header.setFont(headFont);
+                                    add(header);
+
+                                    //add button
+                                    add(new Box.Filler(minSize,prefSize,maxSize));
+                                    add(toStart);
+                                    toStart.setAlignmentX(Component.CENTER_ALIGNMENT);
+                                    header.setAlignmentX(Component.CENTER_ALIGNMENT);
                                 }
 
                                 EventQueue.invokeLater(new Runnable() {
@@ -412,13 +443,26 @@ class ClickGameBoard extends JPanel
             if (clickedMole == false) {
                 // decrement the score
                 GameBoard.score--;
+                GameBoard.scoreNumText.setText(String.valueOf(GameBoard.score));
+                EventQueue.invokeLater(new Runnable() {
+                    public void run() {
+                        revalidate();
+                        repaint();
+                    }
+                });
             }
             else {
                 // increment the round as well as the score
                 GameBoard.score += 3;
-                GameBoard.RoundCount++;
+                GameBoard.scoreNumText.setText(String.valueOf(GameBoard.score));
+                EventQueue.invokeLater(new Runnable() {
+                    public void run() {
+                        revalidate();
+                        repaint();
+                    }
+                });
             }
-            repaint();
+            //repaint();
         }
 
         @Override

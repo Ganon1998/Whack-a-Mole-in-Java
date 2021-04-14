@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
+import java.util.ArrayList;
 import java.util.TimerTask;
 import javax.swing.Timer;
 
@@ -13,9 +14,13 @@ public class GameBoard extends JFrame {
 
     int counter = 0; //only redraw gameboard when it is 0;
     private static JLabel[] holeDesgin = new JLabel[9];
+
     private static int nextSpotforMole;
+
     public static int score;
     public static int BonusTimeModifier;
+    public static ArrayList<Integer> ListOfScores;
+
     private static Timer timer;
 
     int timerSecs = 20;
@@ -282,6 +287,7 @@ public class GameBoard extends JFrame {
                                 //add the drawgameboardholes class, this next block of code is what happens after the timer delays 1000 millisecs
                                 DrawGameBoardHoles draw = new DrawGameBoardHoles();
                                 startMenu.add(draw);
+                                BonusTimeModifier++;
 
 
                                 secondsText.setText("" + timerSecs--);
@@ -292,6 +298,19 @@ public class GameBoard extends JFrame {
                                 if (timerSecs == 0)
                                 {
                                     timer.stop();
+                                    
+                                    // insert current score into the array
+                                    if (ListOfScores.size() <= 6) 
+                                        ListOfScores.add(score);
+                                    else{
+                                        // if there are more than 6 scores incoming, remove the oldest score
+                                        ListOfScores.set(0, 0);
+                                        for (int i = 0; i < ListOfScores.size()-1; i++)
+                                        {
+                                            ListOfScores.set(i,ListOfScores.get(++i));
+                                        }
+                                        ListOfScores.set(ListOfScores.size()-1,score);
+                                    }
 
                                     //repaint screen
                                     startMenu.removeAll();
@@ -311,6 +330,18 @@ public class GameBoard extends JFrame {
                                     header.setForeground(new Color (0,0,0));
                                     header.setFont(headFont);
                                     add(header);
+
+                                    // adds information about scores
+                                    
+                                    for (int i = 0; i < ListOfScores.size(); i++){
+                                        
+                                        JLabel scoreLabel = new JLabel("Score: " + GameBoard.score);
+                                        add(scoreLabel);
+
+                                        scoreLabel.setAlignmentX(CENTER_ALIGNMENT);
+                                        scoreLabel.setAlignmentY(CENTER_ALIGNMENT);
+                                    }
+                                    
 
                                     //add button
                                     add(new Box.Filler(minSize,prefSize,maxSize));
@@ -443,6 +474,7 @@ class ClickGameBoard extends JPanel
             if (clickedMole == false) {
                 // decrement the score
                 GameBoard.score--;
+                GameBoard.BonusTimeModifier = 0;
                 GameBoard.scoreNumText.setText(String.valueOf(GameBoard.score));
                 EventQueue.invokeLater(new Runnable() {
                     public void run() {
@@ -453,7 +485,8 @@ class ClickGameBoard extends JPanel
             }
             else {
                 // increment the round as well as the score
-                GameBoard.score += 3;
+                GameBoard.score += 2 + GameBoard.BonusTimeModifier;
+                GameBoard.BonusTimeModifier = 0;
                 GameBoard.scoreNumText.setText(String.valueOf(GameBoard.score));
                 EventQueue.invokeLater(new Runnable() {
                     public void run() {

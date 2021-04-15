@@ -19,7 +19,7 @@ public class GameBoard extends JFrame {
 
     public static int score;
     public static int BonusTimeModifier;
-    public static ArrayList<Integer> ListOfScores;
+    public static ArrayList<Integer> ListOfScores = new ArrayList<>();
 
     private static Timer timer;
 
@@ -231,8 +231,10 @@ public class GameBoard extends JFrame {
                                         g.drawOval(250, 450, 100, 100);
                                         g.drawOval(450, 450, 100, 100);
 
-                                        // instantiate mouse
+                                        ///////////////////// instantiate mouse ///////////////////////////////////
                                         ClickGameBoard clicker = new ClickGameBoard();
+                                        add(clicker);
+
                                         //create holes, add to specific locations
                                         //maybe can put this in a separate clas??
                                         for (int i=0; i<9; i++) {
@@ -467,6 +469,7 @@ class ClickGameBoard extends JPanel
 
         @Override
         public void mousePressed(MouseEvent m) {
+            System.out.println("Mouse clicked");
             //last = m.getPoint();
 
             // this will check if the mole has been clicked
@@ -520,12 +523,15 @@ class ClickGameBoard extends JPanel
     {
         boolean inCell = false;
         JLabel[] Jarray = GameBoard.getHoleDesign();
+        System.out.println("Inside cell");
 
         for (int i = 0; i < Jarray.length; i++)
         {
+            System.out.println("lookin for mole");
             // if any of the mouse inputs are within the coordinates of the cell and it matches the mole's locaiton
             if ((Jarray[i].getX() <= point.x && Jarray[i].getY() <= point.y) && i == GameBoard.getMole())
             {
+                System.out.println("Hit!!!!!!!!!!!");
                 inCell = true;
                 Mole mole = new Mole();
                 // get the next mole location

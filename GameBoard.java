@@ -58,7 +58,7 @@ public class GameBoard extends JFrame {
                     // decrement the score
                     GameBoard.score--;
                     GameBoard.BonusTimeModifier = 0;
-                    GameBoard.scoreNumText.setText(String.valueOf(GameBoard.score));
+                    GameBoard.scoreNumText.setText("" + GameBoard.score);
                     EventQueue.invokeLater(new Runnable() {
                         public void run() {
                             revalidate();
@@ -69,7 +69,7 @@ public class GameBoard extends JFrame {
                     // increment the round as well as the score
                     GameBoard.score += 2 + GameBoard.BonusTimeModifier;
                     GameBoard.BonusTimeModifier = 0;
-                    GameBoard.scoreNumText.setText(String.valueOf(GameBoard.score));
+                    GameBoard.scoreNumText.setText("" + GameBoard.score);
 
                     EventQueue.invokeLater(new Runnable() {
                         public void run() {
@@ -470,6 +470,9 @@ public class GameBoard extends JFrame {
                                     }
 
                                     //repaint screen
+
+                                    MoveablePFrame.setVisible(false);
+
                                     startMenu.removeAll();
                                     revalidate();
                                     repaint();
@@ -686,10 +689,8 @@ public class GameBoard extends JFrame {
     public boolean isInsideCell(Point point) {
         boolean inCell = false;
         JLabel[] Jarray = GameBoard.getHoleDesign();
-        System.out.println("Inside cell");
         MoveablePFrame.remove(holeDesgin[2]);
         for (int i = 0; i < Jarray.length; i++) {
-            System.out.println("lookin for mole");
             // if any of the mouse inputs are within the coordinates of the cell and it matches the mole's locaiton
             if ((Jarray[i].getX() <= point.x && Jarray[i].getY() <= point.y) && i == GameBoard.getMole()) {
                 System.out.println("Hit!!!!!!!!!!!");

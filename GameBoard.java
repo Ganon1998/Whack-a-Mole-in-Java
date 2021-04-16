@@ -150,7 +150,7 @@ public class GameBoard extends JFrame {
             g.drawOval(50, 450, 100, 100);
             g.drawOval(250, 450, 100, 100);
             g.drawOval(450, 450, 100, 100);
-            
+
 
 
         }
@@ -285,20 +285,8 @@ public class GameBoard extends JFrame {
                         add(startMoles);
 
                         toStart.setAlignmentX(Component.CENTER_ALIGNMENT);
+                        startMoles.setAlignmentX(Component.CENTER_ALIGNMENT);
                         header.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-
-
-
-
-
-
-                        // DrawGameBoardHoles draw = new DrawGameBoardHoles();
-
-
-
-                        // startMenu.add(draw);
-
 
 
 
@@ -307,20 +295,22 @@ public class GameBoard extends JFrame {
                         startMoles.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-
+                                pane.remove(MoveablePFrame);
 
                                 //holeDesgin[moleClass.startMole()].setIcon(moleClass.drawMole());
-                                MoveablePFrame.getContentPane().setBackground(new Color(2, 80, 20));
-                               /* MoveablePFrame.add(scoreText);
+                                MoveablePFrame.setBackground(new Color(2, 80, 20));
+                                setBackground(new Color(2, 80, 20));
+                                MoveablePFrame.add(scoreText);
                                 MoveablePFrame.add(scoreNumText);
                                 MoveablePFrame.add(timerText);
-                                MoveablePFrame.add(secondsText);*/
+                                MoveablePFrame.add(secondsText);
                                 MoveablePFrame.setSize(700,700);
 
                                 DrawGameBoardHoles gbHoles = new DrawGameBoardHoles();
 
                                 MoveablePFrame.add(gbHoles);
                                 MoveablePFrame.setVisible(true);
+
                                 pane.add(MoveablePFrame);
                                 setContentPane(pane);
 
@@ -345,8 +335,8 @@ public class GameBoard extends JFrame {
                                     }
 
                                 }
-                                   // MoveablePFrame.revalidate();
-                                   // MoveablePFrame.repaint();
+                                // MoveablePFrame.revalidate();
+                                // MoveablePFrame.repaint();
 
                                 //MoveablePFrame.removeAll();
 
@@ -367,33 +357,35 @@ public class GameBoard extends JFrame {
                                 }*/
                                 for (int i = 0; i < 9; i++) {
                                     holeDesgin[i] = new JLabel();
-
+                                    if(i==0){
+                                        holeDesgin[i].setBounds(50,150,100,100);
+                                    }
                                     if (i == 1) {
-                                        holeDesgin[i].setBounds(280, 150, 100, 100);
+                                        holeDesgin[i].setBounds(250, 150, 100, 100);
 
                                     }
                                     if (i == 2) {
-                                        holeDesgin[i].setBounds(480, 150, 100, 100);
+                                        holeDesgin[i].setBounds(450, 150, 100, 100);
 
                                     }
                                     if (i == 3) {
-                                        holeDesgin[i].setBounds(80, 300, 100, 100);
+                                        holeDesgin[i].setBounds(50, 300, 100, 100);
 
                                     }
                                     if (i == 4) {
-                                        holeDesgin[i].setBounds(280, 300, 100, 100);
+                                        holeDesgin[i].setBounds(250, 300, 100, 100);
 
                                     }
                                     if (i == 5) {
-                                        holeDesgin[i].setBounds(480, 300, 100, 100);
+                                        holeDesgin[i].setBounds(450, 300, 100, 100);
 
                                     }
                                     if (i == 6) {
-                                        holeDesgin[i].setBounds(80, 450, 100, 100);
+                                        holeDesgin[i].setBounds(50, 450, 100, 100);
 
                                     }
                                     if (i == 7) {
-                                        holeDesgin[i].setBounds(280, 450, 100, 100);
+                                        holeDesgin[i].setBounds(250, 450, 100, 100);
 
                                     }
 
@@ -410,8 +402,8 @@ public class GameBoard extends JFrame {
 
 
 
-                                location = moleClass.startMole();
-                                holeDesgin[location].setIcon(moleClass.drawMole());
+
+                                holeDesgin[moleClass.startMole()].setIcon(moleClass.drawMole());
 
                                 firstTime = false;
                                 // MoveablePFrame.add(new JLabel(moleClass.drawMole()),holeDesgin[moleClass.startMole()]);
@@ -504,10 +496,11 @@ public class GameBoard extends JFrame {
 
 
                                     //add button
-                                    add(new Box.Filler(minSize, prefSize, maxSize));
-                                    add(toStart);
-                                    toStart.setAlignmentX(Component.CENTER_ALIGNMENT);
-                                    header.setAlignmentX(Component.CENTER_ALIGNMENT);
+                                   // add(new Box.Filler(minSize, prefSize, maxSize));
+
+                                    startMenu.setBackground(new Color(2, 80, 20));
+                                    startMenu.add(toStart);
+                                    setContentPane(startMenu);
                                 }
 
 
@@ -621,7 +614,7 @@ public class GameBoard extends JFrame {
                 add(toStart);
                 toStart.setAlignmentX(Component.CENTER_ALIGNMENT);
                 header.setAlignmentX(Component.CENTER_ALIGNMENT);
-                //    setContentPane(startMenu);
+                setContentPane(startMenu);
             }
         });
 

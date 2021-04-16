@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.Timer;
 
 
@@ -10,7 +11,6 @@ public class GameBoard extends JFrame {
 
     int counter = 0; //only redraw gameboard when it is 0;
     private static JLabel[] holeDesgin = new JLabel[9];
-    ///////////////////// instantiate mouse ///////////////////////////////////
 
     JDesktopPane pane = new JDesktopPane();
     JPanel startMenu = new JPanel();
@@ -20,85 +20,87 @@ public class GameBoard extends JFrame {
     JLabel secondsText = new JLabel("20");
     JButton toStart = new JButton("Main Menu");
     JLabel header = new JLabel("Whack-A-Mole!");
-    private static int nextSpotforMole;
 
-    public static int score;
-    public static int BonusTimeModifier;
-    public static ArrayList<Integer> ListOfScores = new ArrayList<>();
-
+    private static int nextSpotforMole = 0;
     private static Timer timer;
 
+    public static int score = 0;
+    public static int BonusTimeModifier = 4;
+    public static ArrayList<Integer> ListOfScores = new ArrayList<>();
+
+
+
     int timerSecs = 20;
-    boolean firstTime = true;
-    private Object drawMole;
+    //boolean firstTime = true;
+    //private Object drawMole;
     Mole moleClass = new Mole();
 
     public static JLabel scoreNumText;
 
     class DrawGameBoardHoles extends JPanel {
 
-            class MouseDrag extends MouseAdapter {
-                private boolean clickedMole = false;
-                private Point last;
+        class MouseDrag extends MouseAdapter {
+            private boolean clickedMole = false;
+            private Point last;
 
-                @Override
-                public void mouseClicked(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mousePressed(MouseEvent m) {
-                    System.out.println("Mouse clicked");
-                    last = m.getPoint();
-
-                    // this will check if the mole has been clicked
-                    clickedMole = isInsideCell(m.getPoint());
-                    if (clickedMole == false) {
-                        // decrement the score
-                        GameBoard.score--;
-                        GameBoard.BonusTimeModifier = 0;
-                        GameBoard.scoreNumText.setText(String.valueOf(GameBoard.score));
-                        EventQueue.invokeLater(new Runnable() {
-                            public void run() {
-                                revalidate();
-                                repaint();
-                            }
-                        });
-                    } else {
-                        // increment the round as well as the score
-                        GameBoard.score += 2 + GameBoard.BonusTimeModifier;
-                        GameBoard.BonusTimeModifier = 0;
-                        GameBoard.scoreNumText.setText(String.valueOf(GameBoard.score));
-                        EventQueue.invokeLater(new Runnable() {
-                            public void run() {
-                                revalidate();
-                                repaint();
-                            }
-                        });
-                    }
-                    repaint();
-                }
-
-                @Override
-                public void mouseReleased(MouseEvent m) {
-                    last = null;
-                    clickedMole = false;
-                    repaint();
-                }
-
-                @Override
-                public void mouseEntered(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-
-                }
+            @Override
+            public void mouseClicked(MouseEvent e) {
 
             }
 
+            @Override
+            public void mousePressed(MouseEvent m) {
+                System.out.println("Mouse clicked");
+                last = m.getPoint();
+
+                // this will check if the mole has been clicked
+                clickedMole = isInsideCell(m.getPoint());
+                if (clickedMole == false) {
+                    // decrement the score
+                    GameBoard.score--;
+                    GameBoard.BonusTimeModifier = 4;
+                    GameBoard.scoreNumText.setText(String.valueOf(GameBoard.score));
+                    EventQueue.invokeLater(new Runnable() {
+                        public void run() {
+                            revalidate();
+                            repaint();
+                        }
+                    });
+                } else {
+                    // increment the round as well as the score
+                    GameBoard.score += 2 + GameBoard.BonusTimeModifier;
+                    GameBoard.BonusTimeModifier = 4;
+                    GameBoard.scoreNumText.setText(String.valueOf(GameBoard.score));
+                    EventQueue.invokeLater(new Runnable() {
+                        public void run() {
+                            revalidate();
+                            repaint();
+                        }
+                    });
+                }
+                repaint();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent m) {
+                last = null;
+                clickedMole = false;
+                repaint();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        }
+
         private MouseDrag dragger;
+
         // private mouseDrag dragger;
         public DrawGameBoardHoles() {
             dragger = new MouseDrag();
@@ -106,97 +108,98 @@ public class GameBoard extends JFrame {
             addMouseListener(dragger);
             addMouseMotionListener(dragger);
         }
-               public void paintComponent(Graphics g) {
-                    setBackground(new Color(20, 80, 0));
-                    MoveablePFrame.repaint();
-                    MoveablePFrame.revalidate();
 
-                    scoreText.setAlignmentX(Component.CENTER_ALIGNMENT);
-                    scoreNumText.setAlignmentX(Component.CENTER_ALIGNMENT);
-                    timerText.setAlignmentX(Component.CENTER_ALIGNMENT);
-                    secondsText.setAlignmentX(Component.CENTER_ALIGNMENT);
+        public void paintComponent(Graphics g) {
+            setBackground(new Color(20, 80, 0));
+            MoveablePFrame.repaint();
+            MoveablePFrame.revalidate();
 
-
-                    scoreText.setAlignmentY(Component.TOP_ALIGNMENT);
-                    scoreNumText.setAlignmentY(Component.TOP_ALIGNMENT);
-                    timerText.setAlignmentY(Component.TOP_ALIGNMENT);
-                    secondsText.setAlignmentY(Component.TOP_ALIGNMENT);
+            scoreText.setAlignmentX(Component.CENTER_ALIGNMENT);
+            scoreNumText.setAlignmentX(Component.CENTER_ALIGNMENT);
+            timerText.setAlignmentX(Component.CENTER_ALIGNMENT);
+            secondsText.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 
-                    toStart.setAlignmentX(Component.CENTER_ALIGNMENT);
-                    header.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-                    //REDRAW OVALS
-                    //super.paintComponent(g);
-                    //startMenu.removeAll();
-                   // revalidate();
-                    //repaint();
-
-                    //JLabel mole = new JLabel("mole");
-                    g.setColor(Color.RED);
-                    g.drawOval(50, 150, 100, 100);
-                    g.drawOval(250, 150, 100, 100);
-                    g.drawOval(450, 150, 100, 100);
-                    g.drawOval(50, 300, 100, 100);
-                    g.drawOval(250, 300, 100, 100);
-                    g.drawOval(450, 300, 100, 100);
-                    g.drawOval(50, 450, 100, 100);
-                    g.drawOval(250, 450, 100, 100);
-                    g.drawOval(450, 450, 100, 100);
+            scoreText.setAlignmentY(Component.TOP_ALIGNMENT);
+            scoreNumText.setAlignmentY(Component.TOP_ALIGNMENT);
+            timerText.setAlignmentY(Component.TOP_ALIGNMENT);
+            secondsText.setAlignmentY(Component.TOP_ALIGNMENT);
 
 
-                    //create holes, add to specific locations
-                    //maybe can put this in a separate clas??
-                    for (int i = 0; i < 9; i++) {
-                        holeDesgin[i] = new JLabel();
+            toStart.setAlignmentX(Component.CENTER_ALIGNMENT);
+            header.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-                        if (i == 1) {
-                            holeDesgin[i].setBounds(280, 150, 100, 100);
+            //REDRAW OVALS
+            //super.paintComponent(g);
+            //startMenu.removeAll();
+            //revalidate();
+            //repaint();
 
-                        }
-                        if (i == 2) {
-                            holeDesgin[i].setBounds(480, 150, 100, 100);
+            //JLabel mole = new JLabel("mole");
+            g.setColor(Color.RED);
+            g.drawOval(50, 150, 100, 100);
+            g.drawOval(250, 150, 100, 100);
+            g.drawOval(450, 150, 100, 100);
+            g.drawOval(50, 300, 100, 100);
+            g.drawOval(250, 300, 100, 100);
+            g.drawOval(450, 300, 100, 100);
+            g.drawOval(50, 450, 100, 100);
+            g.drawOval(250, 450, 100, 100);
+            g.drawOval(450, 450, 100, 100);
 
-                        }
-                        if (i == 3) {
-                            holeDesgin[i].setBounds(80, 300, 100, 100);
 
-                        }
-                        if (i == 4) {
-                            holeDesgin[i].setBounds(280, 300, 100, 100);
+            //create holes, add to specific locations
+            //maybe can put this in a separate class??
+            for (int i = 0; i < 9; i++) {
+                holeDesgin[i] = new JLabel();
 
-                        }
-                        if (i == 5) {
-                            holeDesgin[i].setBounds(480, 300, 100, 100);
+                if (i == 1) {
+                    holeDesgin[i].setBounds(280, 150, 100, 100);
 
-                        }
-                        if (i == 6) {
-                            holeDesgin[i].setBounds(80, 450, 100, 100);
+                }
+                if (i == 2) {
+                    holeDesgin[i].setBounds(480, 150, 100, 100);
 
-                        }
-                        if (i == 7) {
-                            holeDesgin[i].setBounds(280, 450, 100, 100);
+                }
+                if (i == 3) {
+                    holeDesgin[i].setBounds(80, 300, 100, 100);
 
-                        }
+                }
+                if (i == 4) {
+                    holeDesgin[i].setBounds(280, 300, 100, 100);
 
-                        if (i == 8) {
-                            holeDesgin[i].setBounds(480, 450, 100, 100);
+                }
+                if (i == 5) {
+                    holeDesgin[i].setBounds(480, 300, 100, 100);
 
-                        }
+                }
+                if (i == 6) {
+                    holeDesgin[i].setBounds(80, 450, 100, 100);
 
-                        add(holeDesgin[i]);
-
-                    }
-
+                }
+                if (i == 7) {
+                    holeDesgin[i].setBounds(280, 450, 100, 100);
 
                 }
 
+                if (i == 8) {
+                    holeDesgin[i].setBounds(480, 450, 100, 100);
+
+                }
+                add(holeDesgin[i]);
+
+            }
 
 
         }
 
+
+    }
+    /////////////////////////////////////////////////////////////////////
+    /////////////////// end of mouse click class ///////////////////////
+
     public GameBoard() {
-        MoveablePFrame.setBounds(25,25,200,100);
+        MoveablePFrame.setBounds(25, 25, 200, 100);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(150, 150, 660, 770); // set frame bounds
         setTitle("WHACK-A-MOLE");
@@ -260,8 +263,7 @@ public class GameBoard extends JFrame {
                 //Start game, this will draw the board
                 startGame.addActionListener(new ActionListener() {
 
-                  //  ClickGameBoard clicker = new ClickGameBoard();
-
+                    //  ClickGameBoard clicker = new ClickGameBoard();
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -323,20 +325,8 @@ public class GameBoard extends JFrame {
                         toStart.setAlignmentX(Component.CENTER_ALIGNMENT);
                         header.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-
-
-
-
-
-
-                       // DrawGameBoardHoles draw = new DrawGameBoardHoles();
-
-
-
-                       // startMenu.add(draw);
-
-
-
+                        // DrawGameBoardHoles draw = new DrawGameBoardHoles();
+                        // startMenu.add(draw);
 
 
                         //WHEN "START" IS CLICKED, GO TO ACTION LISTENER AND START TIMER
@@ -351,12 +341,13 @@ public class GameBoard extends JFrame {
                                 MoveablePFrame.add(scoreNumText);
                                 MoveablePFrame.add(timerText);
                                 MoveablePFrame.add(secondsText);
-                                MoveablePFrame.setSize(700,700);
+                                MoveablePFrame.setSize(700, 700);
 
                                 DrawGameBoardHoles gbHoles = new DrawGameBoardHoles();
+
+                                MoveablePFrame.add(gbHoles);
                                 pane.add(MoveablePFrame);
                                 setContentPane(pane);
-                                MoveablePFrame.add(gbHoles);
                                 MoveablePFrame.setVisible(true);
 
 
@@ -373,8 +364,11 @@ public class GameBoard extends JFrame {
                         timer = new Timer(1000, new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
+                                //startMenu.removeAll();
 
                                 MoveablePFrame.repaint();
+                                //MoveablePFrame.removeAll();
+
                               /*  for (int i = 0; i < 9; i++) {
                                     holeDesgin[i].addMouseListener(new MouseAdapter() {
                                         @Override
@@ -427,9 +421,26 @@ public class GameBoard extends JFrame {
                                     add(holeDesgin[i]);
 
                                 }
-                                int location = moleClass.startMole();
 
-                                    MoveablePFrame.add(new JLabel(moleClass.drawMole()));
+                                // remove previous mole image
+                                holeDesgin[GameBoard.getMole()].setIcon(null);
+                                MoveablePFrame.add(new JLabel(holeDesgin[GameBoard.getMole()].getIcon()));
+
+                                // get new location
+                                GameBoard.setMole(moleClass.startMole());
+
+                                // set new location for mole
+                                holeDesgin[GameBoard.getMole()].setIcon(moleClass.drawMole());
+
+
+                                //MoveablePFrame.repaint();
+
+                                //repaint();
+
+                                //MoveablePFrame.add(new JLabel(moleClass.drawMole()));
+                                MoveablePFrame.add(new JLabel(holeDesgin[GameBoard.getMole()].getIcon()));
+
+
 
 
                                 //holeDesgin[moleClass.startMole()].setIcon(moleClass.drawMole());
@@ -437,15 +448,16 @@ public class GameBoard extends JFrame {
                                 //add the drawgameboardholes class, this next block of code is what happens after the timer delays 1000 millisecs
                                 //randomize the mole location each second
 
-                                BonusTimeModifier++;
+                                if (BonusTimeModifier > 0)
+                                    BonusTimeModifier--;
 
 
                                 secondsText.setText("" + timerSecs--);
-
                                 secondsText.setText("" + timerSecs);
 
                                 // creates score board screen
-                                if (timerSecs == 0) {
+                                if (timerSecs == 0)
+                                {
                                     timer.stop();
 
                                     // insert current score into the array
@@ -614,7 +626,7 @@ public class GameBoard extends JFrame {
                 add(toStart);
                 toStart.setAlignmentX(Component.CENTER_ALIGNMENT);
                 header.setAlignmentX(Component.CENTER_ALIGNMENT);
-                //    setContentPane(startMenu);
+                //setContentPane(startMenu);
             }
         });
 
@@ -691,29 +703,38 @@ public class GameBoard extends JFrame {
     // mouse event class
 
 
+    // checks to see if mouse click is inside a cell or not returns true if so, returns false otherwise
+    public boolean isInsideCell(Point point) {
+        boolean inCell = false;
+        JLabel[] Jarray = GameBoard.getHoleDesign();
 
-        // checks to see if mouse click is inside a cell or not returns true if so, returns false otherwise
-        public boolean isInsideCell(Point point) {
-            boolean inCell = false;
-            JLabel[] Jarray = GameBoard.getHoleDesign();
-            System.out.println("Inside cell");
+        for (int i = 0; i < Jarray.length; i++) {
+            // if any of the mouse inputs are within the coordinates of the cell and it matches the mole's locaiton
 
-            for (int i = 0; i < Jarray.length; i++) {
-                System.out.println("lookin for mole");
-                // if any of the mouse inputs are within the coordinates of the cell and it matches the mole's locaiton
-                if ((Jarray[i].getX() <= point.x && Jarray[i].getY() <= point.y) && i == GameBoard.getMole()) {
-                    System.out.println("Hit!!!!!!!!!!!");
-                    inCell = true;
-                    Mole mole = new Mole();
-                    // get the next mole location
-                    GameBoard.setMole(mole.play(i));
-                    return inCell;
-                }
+            if (Jarray[i].contains(point) && i == GameBoard.getMole()){
+                System.out.println("Hit!!!!!!!!!!!");
+                inCell = true;
+                Mole mole = new Mole();
+                // get the next mole location
+                GameBoard.setMole(mole.play(i));
+                return inCell;
+            }
+
+            /*if ((Jarray[i].getX() <= point.x - 100 && Jarray[i].getY() <= point.y - 100) && i == GameBoard.getMole()) {
 
             }
-            GameBoard.setMole((int) (Math.random() * 9));
-            return inCell;
+            */
+
         }
+        int next = 0;
+        Random rn = new Random();
+
+        while (next != GameBoard.getMole())
+            next = rn.nextInt(8) + 1;
+
+        GameBoard.setMole(next);
+        return inCell;
+    }
 
 
     /*@Override
@@ -721,4 +742,4 @@ public class GameBoard extends JFrame {
         super.paintComponent(g);
     }*/
 
-    }
+}
